@@ -19,7 +19,7 @@
      kalau sudah aktif, di terminalnya kalian akan ada seperti ini(contoh) : (nama-env) D:\web-dev\..
   <br>
   <br>
-  4. Install dependencies menggunakan file requirements.txt
+  4. Install dependencies menggunakan file requirements.txt (masuk dulu ke directory web-crud-django)
   <br>
      command : **pip install -r requirements.txt**
   <br>
