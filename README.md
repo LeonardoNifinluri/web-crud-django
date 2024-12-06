@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/bafccb4f-1d2d-42eb-987d-ab686acec609)<h1>Setup</h1>
 <p>
   1. Setelah kalin clone, buat virtual environment baru di terminal
   <br>
