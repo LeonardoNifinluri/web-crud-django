@@ -26,8 +26,9 @@
   <br>
   5. Kalau sudah, masuk ke directory web-crud-django dan type : **py manage.py runserver**
   <br>
-  nanti ada muncul seperti ini : 
+  nanti ada muncul seperti ini : starting development server at http://127.0.0.1:8000/
   <br>
-  ![image](https://github.com/user-attachments/assets/44605dff-7598-4c3f-a771-f575639c83b8)
-
+  copy http://127.0.0.1:8000/ di browser
+  <br>
 </p>
+
