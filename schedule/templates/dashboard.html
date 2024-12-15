@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>Dashboard</title>
 </head>
 <body>
@@ -24,5 +25,68 @@
         </tr>
     {% endfor %}
     <button><a href="/create">Create</a></button>
+    <br>
+    <ul id="schedules">
+
+    </ul>
+
+    <!-- this is implementation of jquery + ajax -->
+     <!-- the purpose is to update the data without refresh the page by using ajax and dom manipulation using jquery -->
+    <script>
+        $(document).ready(function(){
+
+            //this function to render the list item
+            function renderSchedules(schedules){
+                const ul = $('#schedules');
+                ul.empty();
+                if(schedules.length === 0){
+                    ul.append("<li><h2>No schedules available</h2></li>");
+                    return;
+                }
+                schedules.forEach(schedule => {
+                    const li = `
+                        <li>
+                            <h2>${schedule.subject}</h2>   
+                            <br>
+                            <p>Major: ${schedule.major}</p> 
+                            <br>
+                            <p>Teacher: ${schedule.teacher_name}</p> 
+                            <br>
+                            <p>Time: ${schedule.time_begins} - ${schedule.time_ends}</p>   
+                            <br>
+                            <p>Room: ${schedule.room}</p> 
+                            <br>
+                            <p>Day: ${schedule.day}</p>
+                            <br> 
+                        </li>
+                    `;
+                    ul.append(li)
+                });
+            }
+
+            //this function to fetch data from the backend api endpoint
+            function fetchSchedules(){
+                $.ajax({
+                    type: 'GET',
+                    url: "getSchedules",
+                    success: function(response){
+                        //how to know if it's schedules or schedule?
+                        //we use the same name as defined in the function in view.py which is get_schedules function
+                        renderSchedules(response.schedules);
+                    },
+                    error: function(response){
+                        console.error('Error fetching schedules:', error);
+                        alert('Error occurred while fetching schedules.');
+                    }
+                });
+            }
+
+            //this is to update data every particular time(to get live data)
+            //this code to update the data every 1000 miliseconds (1 second)
+            setInterval(fetchSchedules, 1000);
+
+        });
+    </script>
+
 </body>
 </html>

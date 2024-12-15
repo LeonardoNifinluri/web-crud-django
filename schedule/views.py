@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from schedule.models import Schedule, Subject, Major
 
@@ -38,6 +38,39 @@ def dashboard(request):
         request=request, 
         template_name='dashboard.html',
         context=context
+    )
+
+def get_schedules(request):
+    majors = Major.objects.all()
+    subjects = Subject.objects.all()
+    schedules = Schedule.objects.all()
+
+    major_dict = {}
+    for major in majors:
+        major_dict[major.id] = major.name
+    
+    subject_dict = {}
+    for subject in subjects:
+        subject_dict[subject.id] = subject.name
+    
+    schedule_list = []
+    for schedule in schedules:
+        schedule_list.append(
+            {
+                'id': schedule.id,
+                'major': major_dict[schedule.major_id],
+                'subject': subject_dict[schedule.subject_id],
+                'teacher_name': schedule.teacher_name,
+                'time_begins': schedule.time_begins,
+                'time_ends': schedule.time_ends,
+                'room': schedule.room,
+                'day': schedule.day
+            }
+        )
+    return JsonResponse(
+        {
+            'schedules': schedule_list
+        }
     )
 
 def create(request):

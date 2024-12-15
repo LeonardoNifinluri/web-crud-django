@@ -8,6 +8,11 @@ urlpatterns = [
         name='dashboard'
     ),
     path(
+        route='getSchedules/',
+        view=views.get_schedules,
+        name='getSchedules'
+    ),
+    path(
         route='create/',
         view=views.create,
         name='create'

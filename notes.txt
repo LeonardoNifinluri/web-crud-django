@@ -1,0 +1,3 @@
+apa yang harus dilakukan selanjutnya : 
+1. Tetap mengimplementasikan setInterval untuk live data
+2. Melakukan manipulasi dom menggunakan jquery pada page tambah schedule
