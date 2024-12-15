@@ -1,19 +1,96 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/add-schedule.css' %}">
     <title>Update Schedule</title>
 </head>
 <body>
-    <p>Schedule id : {{schedule.id}}</p>
-    <p>Major : {{schedule.major}}</p>
-    <p>Subject : {{schedule.subject}}</p>
-    <p>Teacher : {{schedule.teacher_name}}</p>
-    <p>Time : {{schedule.time_begins}} - {{schedule.time_ends}}</p>
-    <p>Room : {{schedule.room}}</p>
-    <p>Day : {{schedule.day}}</p>
-    <br>
-    <br>
+    <div class="container">
+        <div class="header-section">
+            <h1>Update Schedule #{{schedule.id}}</h1>
+            <a href="/" class="dashboard-button">Back to Dashboard</a>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="major">Major</label>
+                <div class="dropdown-group">
+                    <select id="major" name="major_id" required>
+                        <option value="" disabled selected>Select Major</option>
+                        {% for major in majors %}
+                            <option value="{{ major.id }}">{{ major.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="add-button" onclick="showPopup('major')">Add Major</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <div class="dropdown-group">
+                    <select id="subject" name="subject_id" required>
+                        <option value="" disabled selected>Select Subject</option>
+                        {% for subject in subjects %}
+                            <option value="{{ subject.id }}">{{ subject.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="add-button" onclick="showPopup('subject')">Add Subject</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="teacher_name">Teacher</label>
+                <input type="text" id="teacher_name" name="teacher_name" placeholder="{{schedule.teacher_name}}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="time">Time</label>
+                <div class="time-inputs">
+                    <input type="text" id="time_begins" name="time_begins" placeholder="{{schedule.time_begins}}" required>
+                    <input type="text" id="time_ends" name="time_ends" placeholder="{{schedule.time_ends}}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="room">Room</label>
+                <input type="text" id="room" name="room" placeholder="{{schedule.room}}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="day">Day</label>
+                <input type="text" id="day" name="day" placeholder="{{schedule.day}}" required>
+            </div>
+
+            <button type="submit" class="submit-button">Update Schedule</button>
+        </form>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-button" onclick="closePopup()">&times;</span>
+            <h2 id="popup-title">Add New Major</h2>
+            <form id="popup-form" method="POST">
+                {% csrf_token %}
+                <input type="text" id="popup-input" placeholder="Enter Name" required>
+                <button type="submit" class="submit-button">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(type) {
+            document.getElementById('popup').style.display = 'flex';
+            document.getElementById('popup-title').innerText = 'Add New ' + type.charAt(0).toUpperCase() + type.slice(1);
+            document.getElementById('popup-input').placeholder = 'Enter ' + type + ' Name';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

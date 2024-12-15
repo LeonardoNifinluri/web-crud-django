@@ -13,6 +13,16 @@ urlpatterns = [
         name='getSchedules'
     ),
     path(
+        route='getMajors/',
+        view=views.get_majors,
+        name='getMajors'
+    ),
+    path(
+        route='getSubjects/',
+        view=views.get_subjects,
+        name='getSubjects'
+    ),
+    path(
         route='create/',
         view=views.create,
         name='create'

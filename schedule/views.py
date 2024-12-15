@@ -40,6 +40,39 @@ def dashboard(request):
         context=context
     )
 
+def create(request):
+    majors = Major.objects.all().values()
+    subjects = Subject.objects.all().values()
+    context = {
+        'majors': majors,
+        'subjects': subjects
+    }
+    template_name = 'add-schedule.html'
+    return render(
+        request=request,
+        template_name=template_name,
+        context=context
+    )
+
+
+def update(request, id):
+    # Retrieve the specific schedule or return a 404 error if not found
+    schedule = get_object_or_404(Schedule, pk=id)
+    majors = Major.objects.all().values()
+    subjects = Subject.objects.all().values()
+    context = {
+        'schedule': schedule,
+        'majors': majors,
+        'subjects': subjects
+    }
+
+    return render(
+        request=request,
+        template_name='update-schedule.html',
+        context=context
+    )
+
+# for testing when fetch data
 def get_schedules(request):
     majors = Major.objects.all()
     subjects = Subject.objects.all()
@@ -73,23 +106,19 @@ def get_schedules(request):
         }
     )
 
-def create(request):
-    template_name = 'add-schedule.html'
-    return render(
-        request=request,
-        template_name=template_name
+def get_majors(request):
+    majors = Major.objects.all().values()
+    return JsonResponse(
+        {
+            'majors': list(majors)
+        }
     )
 
-
-def update(request, id):
-    # Retrieve the specific schedule or return a 404 error if not found
-    schedule = get_object_or_404(Schedule, pk=id)
-    context = {
-        'schedule': schedule
-    }
-    return render(
-        request=request,
-        template_name='update-schedule.html',
-        context=context
+def get_subjects(request):
+    subjects = Subject.objects.all().values()
+    return JsonResponse(
+        {
+            'subjects': list(subjects)
+        }
     )
 
