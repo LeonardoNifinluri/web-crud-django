@@ -3,26 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>TEKNIK Schedule Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-content {
+            width: 60%;
+            margin: 30px 0;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 40px;
+        }
+
+        .header-section h1 {
+            margin: 0;
+            font-size: 28px;  
+            color: #333;
+        }
+
+        .header-section .add-schedule-button {
+            display: inline-block;
+            background-color: #28a745;
+            padding: 12px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;  /* Slightly larger font */
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .header-section .add-schedule-button:hover {
+            background-color: #218838;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        form input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        .schedule-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-card p {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .schedule-card p strong {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-group .update-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button-group .update-button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-group .delete-button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button-group .delete-button:hover {
+            background-color: #a71d2a;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>TEKNIK</h1>
-    {% for schedule in schedules %}
-        <tr>
-            <p>Schedule id : {{schedule.id}}</p>
-            <p>Major : {{schedule.major}}</p>
-            <p>Subject : {{schedule.subject}}</p>
-            <p>Teacher : {{schedule.teacher_name}}</p>
-            <p>Time : {{schedule.time_begins}} - {{schedule.time_ends}}</p>
-            <p>Room : {{schedule.room}}</p>
-            <p>Day : {{schedule.day}}</p>
-            <button><a href="/update/{{schedule.id}}">Update</a></button>
-            <button>Delete</button>
-            <br>
-            <br>
+    <div class="main-content">
+        <div class="header-section">
+            <h1>TEKNIK<br>Schedule Management</h1>
+            <a href="/create" class="add-schedule-button">Add Schedule</a>
+        </div>
 
-        </tr>
-    {% endfor %}
-    <button><a href="/create">Create</a></button>
+        <form method="GET" action="/search">
+            <input type="text" name="query" placeholder="Search schedules...">
+            <button type="submit">Search</button>
+        </form>
+
+        {% if schedules %}
+            {% for schedule in schedules %}
+            <div class="schedule-card">
+                <p><strong>Schedule ID:</strong> {{ schedule.id }}</p>
+                <p><strong>Major:</strong> {{ schedule.major }}</p>
+                <p><strong>Subject:</strong> {{ schedule.subject }}</p>
+                <p><strong>Teacher:</strong> {{ schedule.teacher_name }}</p>
+                <p><strong>Time:</strong> {{ schedule.time_begins }} - {{ schedule.time_ends }}</p>
+                <p><strong>Room:</strong> {{ schedule.room }}</p>
+                <p><strong>Day:</strong> {{ schedule.day }}</p>
+
+                <div class="button-group">
+                    <a href="/update/{{ schedule.id }}" class="update-button">Update</a>
+                    <a href="/delete/{{ schedule.id }}" class="delete-button">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No schedules available. <a href="/create" class="add-schedule-button">Add a schedule</a></p>
+        {% endif %}
+    </div>
 </body>
 </html>
