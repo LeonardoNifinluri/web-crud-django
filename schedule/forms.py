@@ -16,7 +16,6 @@ class ScheduleForm(forms.ModelForm):
     )
     teacher_name = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Select teacher', 'class': 'text-input'})
     )
     time_begins = forms.TimeField(
         required=True,
