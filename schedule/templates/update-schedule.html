@@ -19,78 +19,130 @@
             <div class="form-group">
                 <label for="major">Major</label>
                 <div class="dropdown-group">
-                    <select id="major" name="major_id" required>
-                        <option value="" disabled selected>Select Major</option>
-                        {% for major in majors %}
-                            <option value="{{ major.id }}">{{ major.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="button" class="add-button" onclick="showPopup('major')">Add Major</button>
+                    {{ form.major }}
+                    <button type="button" class="add-button" onclick="showPopupMajor()">Add Major</button>
                 </div>
+                {% if form.major.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.major.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="subject">Subject</label>
                 <div class="dropdown-group">
-                    <select id="subject" name="subject_id" required>
-                        <option value="" disabled selected>Select Subject</option>
-                        {% for subject in subjects %}
-                            <option value="{{ subject.id }}">{{ subject.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="button" class="add-button" onclick="showPopup('subject')">Add Subject</button>
+                    {{ form.subject }}
+                    <button type="button" class="add-button" onclick="showPopupSubject()">Add Subject</button>
                 </div>
+                {% if form.subject.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.subject.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="teacher_name">Teacher</label>
-                <input type="text" id="teacher_name" name="teacher_name" placeholder="{{schedule.teacher_name}}" required>
+                {{ form.teacher_name }}
+                {% if form.teacher_name.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.teacher_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="time">Time</label>
                 <div class="time-inputs">
-                    <input type="text" id="time_begins" name="time_begins" placeholder="{{schedule.time_begins}}" required>
-                    <input type="text" id="time_ends" name="time_ends" placeholder="{{schedule.time_ends}}" required>
+                    {{ form.time_begins }}
+                    {{ form.time_ends }}
                 </div>
+                {% if form.time_begins.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.time_begins.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="room">Room</label>
-                <input type="text" id="room" name="room" placeholder="{{schedule.room}}" required>
+                {{ form.room }}
+                {% if form.room.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.room.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="day">Day</label>
-                <input type="text" id="day" name="day" placeholder="{{schedule.day}}" required>
+                {{ form.day }}
+                {% if form.day.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.day.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
 
             <button type="submit" class="submit-button">Update Schedule</button>
         </form>
     </div>
 
-    <div id="popup" class="popup">
+    <div id="popup-major" class="popup">
         <div class="popup-content">
-            <span class="close-button" onclick="closePopup()">&times;</span>
-            <h2 id="popup-title">Add New Major</h2>
-            <form id="popup-form" method="POST">
+            <span class="close-button" onclick="closePopupMajor()">&times;</span>
+            <h2 id="popup-title-major">Add New Major</h2>
+            <form action="/createMajor/" id="popup-form-major" method="POST">
                 {% csrf_token %}
-                <input type="text" id="popup-input" placeholder="Enter Name" required>
+                {{major_form.name}}
+                <button type="submit" class="submit-button">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="popup-subject" class="popup">
+        <div class="popup-content">
+            <span class="close-button" onclick="closePopupSubject()">&times;</span>
+            <h2 id="popup-title-subject">Add New Subject</h2>
+            <form action="/createSubject/" id="popup-form-subject" method="POST">
+                {% csrf_token %}
+                {{subject_form.name}}
                 <button type="submit" class="submit-button">Add</button>
             </form>
         </div>
     </div>
 
     <script>
-        function showPopup(type) {
-            document.getElementById('popup').style.display = 'flex';
-            document.getElementById('popup-title').innerText = 'Add New ' + type.charAt(0).toUpperCase() + type.slice(1);
-            document.getElementById('popup-input').placeholder = 'Enter ' + type + ' Name';
+        //this is for major
+        function showPopupMajor(){
+            document.getElementById('popup-major').style.display = 'flex';
+            document.getElementById('popup-input-major').placeholder = 'Enter ' + 'Major' + ' Name';
         }
+        function closePopupMajor(){
+            document.getElementById('popup-major').style.display = 'none';
+        }
+        //this is for subject
+        function showPopupSubject(){
+            document.getElementById('popup-subject').style.display = 'flex';
+            document.getElementById('popup-input-subject').placeholder = 'Enter ' + 'Subject' + ' Name';
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
         }
+        function closePopupSubject(){
+            document.getElementById('popup-subject').style.display = 'none';
+        }  
     </script>
 </body>
 </html>

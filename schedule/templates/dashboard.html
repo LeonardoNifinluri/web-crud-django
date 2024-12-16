@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEKNIK Schedule Management</title>
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js></script>
 </head>
 <body>
     <div class="main-content">
         <div class="header-section">
             <h1>TEKNIK<br>Schedule Management</h1>
-            <a href="/create" class="add-schedule-button">Add Schedule</a>
+            <a href="/createSchedule" class="add-schedule-button">Add Schedule</a>
         </div>
 
         <form method="GET" action="/search">
@@ -32,7 +33,7 @@
 
                 <div class="button-group">
                     <a href="/update/{{ schedule.id }}" class="update-button">Update</a>
-                    <a href="/delete/{{ schedule.id }}" class="delete-button">Delete</a>
+                    <a id="delete-button" href="/delete/{{ schedule.id }}" class="delete-button">Delete</a>
                 </div>
             </div>
             {% endfor %}

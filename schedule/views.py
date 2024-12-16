@@ -1,5 +1,6 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from schedule.forms import MajorForm, ScheduleForm, SubjectForm
 from schedule.models import Schedule, Subject, Major
 
 # Create your views here.
@@ -40,36 +41,65 @@ def dashboard(request):
         context=context
     )
 
-def create(request):
+def create_schedule(request):
     majors = Major.objects.all().values()
     subjects = Subject.objects.all().values()
-    context = {
-        'majors': majors,
-        'subjects': subjects
-    }
-    template_name = 'add-schedule.html'
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = ScheduleForm()
+        major_form = MajorForm()
+        subject_form = SubjectForm()
+    
     return render(
         request=request,
-        template_name=template_name,
-        context=context
+        template_name='add-schedule.html',
+        context={
+            'form': form,
+            'major_form': major_form,
+            'subject_form': subject_form,
+            'majors': majors,
+            'subjects': subjects
+        }
     )
 
+def create_major(request):
+    form = MajorForm(request.POST)
+    if form.is_valid():
+        form.save()
+        return redirect('/createSchedule')
+    
+def create_subject(request):
+    form = SubjectForm(request.POST)
+    if form.is_valid():
+        form.save()
+        return redirect('/createSchedule')
+    
+def destroy(request, id):
+    schedule = get_object_or_404(Schedule, pk=id)
+    schedule.delete()
+    return redirect('/')
 
 def update(request, id):
     # Retrieve the specific schedule or return a 404 error if not found
     schedule = get_object_or_404(Schedule, pk=id)
-    majors = Major.objects.all().values()
-    subjects = Subject.objects.all().values()
-    context = {
-        'schedule': schedule,
-        'majors': majors,
-        'subjects': subjects
-    }
 
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST, instance=schedule)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = ScheduleForm(instance=schedule)
     return render(
         request=request,
         template_name='update-schedule.html',
-        context=context
+        context={
+            'form': form,
+        }
     )
 
 # for testing when fetch data

@@ -23,9 +23,24 @@ urlpatterns = [
         name='getSubjects'
     ),
     path(
-        route='create/',
-        view=views.create,
-        name='create'
+        route='createSchedule/',
+        view=views.create_schedule,
+        name='createSchedule'
+    ),
+    path(
+        route='createMajor/',
+        view=views.create_major,
+        name='createMajor'
+    ),
+    path(
+        route='createSubject/',
+        view=views.create_subject,
+        name='createSubject'
+    ),
+    path(
+        route='delete/<int:id>/',
+        view=views.destroy,
+        name='delete'
     ),
     path(
         route='update/<int:id>/',
