@@ -9,7 +9,6 @@ body {
 
 .main-content {
     width: 60%;
-    margin: 30px 0;
     background-color: #fff;
     padding: 30px;
     border-radius: 8px;
@@ -130,4 +129,13 @@ form button:hover {
 
 .button-group .delete-button:hover {
     background-color: #a71d2a;
+}  
+
+.custom-container{
+    display: none;
+    color: red;
+}
+
+.custom-container p{
+    color: red;
 }

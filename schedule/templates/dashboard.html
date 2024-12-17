@@ -33,17 +33,13 @@
 
                 <div class="button-group">
                     <a href="/update/{{ schedule.id }}" class="update-button">Update</a>
-                    <a id="delete-button" href="/delete/{{ schedule.id }}" class="delete-button">Delete</a>
+                    <a href="/delete/{{ schedule.id }}" class="delete-button">Delete</a>
                 </div>
             </div>
             {% endfor %}
         {% else %}
             <p>No schedules available.</p>
-        {% endif %}
+        {% endif %}        
     </div>
 </body>
-
-<script>
-
-</script>
 </html>
