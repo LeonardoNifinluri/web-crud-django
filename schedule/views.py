@@ -5,40 +5,58 @@ from schedule.models import Schedule, Subject, Major, Teacher
 
 # Create your views here.
 def dashboard(request):
-    majors = Major.objects.all()
-    subjects = Subject.objects.all()
-    schedules = Schedule.objects.all()
-    teachers = Teacher.objects.all()
-
-    major_dict = {}
-    for major in majors:
-        major_dict[major.id] = major.name
-    
-    subject_dict = {}
-    for subject in subjects:
-        subject_dict[subject.id] = subject.name
-
-    teacher_dict = {}
-    for teacher in teachers:
-        teacher_dict[teacher.id] = teacher.name
-    
-    schedule_list = []
-    for schedule in schedules:
-        schedule_list.append(
-            {
-                'id': schedule.id,
-                'major': major_dict[schedule.major_id],
-                'subject': subject_dict[schedule.subject_id],
-                'teacher_name': teacher_dict[schedule.teacher_id],
-                'time_begins': schedule.time_begins,
-                'time_ends': schedule.time_ends,
-                'room': schedule.room,
-                'day': schedule.day
-            }
+    query = request.GET.get('query', '')
+    flag = 0
+    # check if user input something in the search bar and if yes, filter and return match schedule
+    if query:
+        schedules = Schedule.objects.filter(
+            major__name__icontains=query
+        ) | Schedule.objects.filter(
+            subject__name__icontains=query
+        ) | Schedule.objects.filter(
+            teacher__name__icontains=query
+        ) | Schedule.objects.filter(
+            day__icontains=query
         )
+        flag = 1
+    else:
+        majors = Major.objects.all()
+        subjects = Subject.objects.all()
+        schedules = Schedule.objects.all()
+        teachers = Teacher.objects.all()
+
+        major_dict = {}
+        for major in majors:
+            major_dict[major.id] = major
+
+        subject_dict = {}
+        for subject in subjects:
+            subject_dict[subject.id] = subject
+
+        teacher_dict = {}
+        for teacher in teachers:
+            teacher_dict[teacher.id] = teacher
+
+        schedule_list = []
+        for schedule in schedules:
+            schedule_list.append(
+                {
+                    'id': schedule.id,
+                    'major': major_dict[schedule.major_id],
+                    'subject': subject_dict[schedule.subject_id],
+                    'teacher': teacher_dict[schedule.teacher_id],
+                    'time_begins': schedule.time_begins,
+                    'time_ends': schedule.time_ends,
+                    'room': schedule.room,
+                    'day': schedule.day
+                }
+            )
+        schedules = schedule_list
  
     context = {
-        'schedules': schedule_list
+        'schedules': schedules,
+        'query': query,
+        'flag': flag
     }
     return render(
         request=request, 

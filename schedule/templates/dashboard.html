@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEKNIK Schedule Management</title>
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="main-content">
@@ -15,8 +15,8 @@
             <a href="/createSchedule" class="add-schedule-button">Add Schedule</a>
         </div>
 
-        <form method="GET" action="/search">
-            <input type="text" name="query" placeholder="Search schedules...">
+        <form method="GET" action="">
+            <input type="text" name="query" placeholder="Search schedules..." value="{{ query }}">
             <button type="submit">Search</button>
         </form>
 
@@ -26,7 +26,7 @@
                 <p><strong>Schedule ID:</strong> {{ schedule.id }}</p>
                 <p><strong>Major:</strong> {{ schedule.major }}</p>
                 <p><strong>Subject:</strong> {{ schedule.subject }}</p>
-                <p><strong>Teacher:</strong> {{ schedule.teacher_name }}</p>
+                <p><strong>Teacher:</strong> {{ schedule.teacher }}</p>
                 <p><strong>Time:</strong> {{ schedule.time_begins }} - {{ schedule.time_ends }}</p>
                 <p><strong>Room:</strong> {{ schedule.room }}</p>
                 <p><strong>Day:</strong> {{ schedule.day }}</p>
@@ -38,8 +38,12 @@
             </div>
             {% endfor %}
         {% else %}
-            <p>No schedules available. <a href="/create" class="add-schedule-button">Add a schedule</a></p>
+            <p>No schedules available.</p>
         {% endif %}
     </div>
 </body>
+
+<script>
+
+</script>
 </html>

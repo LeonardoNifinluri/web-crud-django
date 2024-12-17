@@ -1,4 +1,1 @@
-belum bisa melakukan create schedule
-belum bisa melakukan sorting berdasarkan id
-belum bisa delete dan update
 belum bisa melakukan searching
