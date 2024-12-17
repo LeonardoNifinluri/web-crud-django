@@ -173,10 +173,25 @@
 
     <script>
         $(document).ready(function(){
+            /*
+            What component that does have id = 'id_major'?
+            the answer is the select component that Django render when use form.major (Django form)
+            when use Django form in a template file (ex : {{ form.major }}), Django will render it to the right html tag
+            in forms.py (ScheduleForm), we defined the major field as ModalChoiceField. So Django render it as select tag with id and name (Django generates the id and name)
+            */
+            //fetch subjects and teachers when dropdown changes
             $('#id_major').change(function(){
                 let majorId = $(this).val()
+                fetchSubjectsAndTeachers(majorId)
+            })
 
-                //if majorId exists
+            //fetch subject and teachers when drowpdown contains initial value
+            const initialMajorId = $('#id_major').val()
+            if(initialMajorId){
+                fetchSubjectsAndTeachers(initialMajorId)
+            }
+
+            function fetchSubjectsAndTeachers(majorId){
                 if(majorId){
                     //fetch subject based on major_id
                     $.ajax({
@@ -213,7 +228,8 @@
                     $('#id_subject').empty().append('<option value="">Select Subject</option>')
                     $('#id_teacher').empty().append('<option value="">Select Teacher</option>')
                 }
-            })
+            }
+            
         })
 
         //this is for major
