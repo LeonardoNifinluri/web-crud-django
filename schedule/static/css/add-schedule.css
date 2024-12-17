@@ -92,6 +92,21 @@ body {
   gap: 10px;
 }
 
+.time-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.time-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 .submit-button {
   width: 100%;
   padding: 14px;
@@ -150,4 +165,12 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box
+}
+
+.schedule-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
 }
