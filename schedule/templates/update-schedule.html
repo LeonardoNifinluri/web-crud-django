@@ -232,24 +232,27 @@
             
         })
 
-        //this is for major
-        function showPopupMajor(){
-            document.getElementById('popup-major').style.display = 'flex';
-            document.getElementById('popup-input-major').placeholder = 'Enter ' + 'Major' + ' Name';
+        // This is for major
+        function showPopupMajor() {
+        $('#popup-major').css('display', 'flex');
+        $('#popup-input-major').attr('placeholder', 'Enter Major Name');
         }
-        //this is for subject
-        function showPopupSubject(){
-            document.getElementById('popup-subject').style.display = 'flex';
-            document.getElementById('popup-input-subject').placeholder
-             = 'Enter ' + 'Subject' + ' Name';
-        } 
-        //this is for teacher
-        function showPopupTeacher(){
-            document.getElementById('popup-teacher').style.display = 'flex';
-            document.getElementById('popup-input-teacher').placeholder = 'Enter ' + 'Teacher' + ' Name';
+
+        // This is for subject
+        function showPopupSubject() {
+        $('#popup-subject').css('display', 'flex');
+        $('#popup-input-subject').attr('placeholder', 'Enter Subject Name');
         }
-        function closePopup(id){
-            document.getElementById(id).style.display = 'none';
+
+        // This is for teacher
+        function showPopupTeacher() {
+        $('#popup-teacher').css('display', 'flex');
+        $('#popup-input-teacher').attr('placeholder', 'Enter Teacher Name');
+        }
+
+        // Function to close popup
+        function closePopup(id) {
+        $('#' + id).css('display', 'none');
         }
     </script>
 </body>
