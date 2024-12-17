@@ -23,6 +23,11 @@ urlpatterns = [
         name='getSubjects'
     ),
     path(
+        route='getTeachers/',
+        view=views.get_teachers,
+        name='getTeachers'
+    ),
+    path(
         route='createSchedule/',
         view=views.create_schedule,
         name='createSchedule'
@@ -36,6 +41,11 @@ urlpatterns = [
         route='createSubject/',
         view=views.create_subject,
         name='createSubject'
+    ),
+    path(
+        route='createTeacher/',
+        view=views.create_teacher,
+        name='createTeacher'
     ),
     path(
         route='delete/<int:id>/',

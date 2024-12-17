@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/add-schedule.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Add Schedule</title>
 </head>
 <body>
@@ -15,9 +16,10 @@
         </div>
         <form action="" method="POST">
             {% csrf_token %}
-            
+
+            <!-- major dropdown -->
             <div class="form-group">
-                <label for="major">Major</label>
+                <label for="{{ form.major.id_for_label }}">Major</label>
                 <div class="dropdown-group">
                     {{ form.major }}
                     <button type="button" class="add-button" onclick="showPopupMajor()">Add Major</button>
@@ -31,10 +33,14 @@
                 {% endif %}
             </div>
         
+            <!-- subject dropdown -->
             <div class="form-group">
-                <label for="subject">Subject</label>
+                <label for="{{ form.subject.id_for_label }}">Subject</label>
                 <div class="dropdown-group">
-                    {{ form.subject }}
+                    <!-- {{ form.subject }} -->
+                    <select id="id_subject" class="dropdown" name="subject">
+                        <option value="">Select Subject</option>
+                    </select>
                     <button type="button" class="add-button" onclick="showPopupSubject()">Add Subject</button>
                 </div>
                 {% if form.subject.errors %}
@@ -46,10 +52,14 @@
                 {% endif %}
             </div>
         
+            <!-- teacher dropdown -->
             <div class="form-group">
-                <label for="teacher">Teacher</label>
+                <label for="{{ form.teacher.id_for_label }}">Teacher</label>
                 <div class="dropdown-group">
-                    {{ form.teacher }}
+                    <!-- {{ form.teacher }} -->
+                    <select id="id_teacher" class="dropdown" name="teacher">
+                        <option value="">Select Teacher</option>
+                    </select>
                     <button type="button" class="add-button" onclick="showPopupTeacher()">Add Teacher</button>
                 </div>
                 {% if form.teacher.errors %}
@@ -61,8 +71,9 @@
                 {% endif %}
             </div>
             
+            <!-- time input -->
             <div class="form-group">
-                <label for="time_begins">Time</label>
+                <label for="{{form.time_begins.id_for_label}}">Time</label>
                 <div class="time-inputs">
                     {{ form.time_begins }}
                     {{ form.time_ends }}
@@ -76,13 +87,15 @@
                 {% endif %}
             </div>
             
+            <!-- room dropdown -->
             <div class="form-group">
-                <label for="room">Room</label>
+                <label for="{{ form.room.id_for_label }}">Room</label>
                 {{ form.room }}
             </div>
             
+            <!-- day dropdown -->
             <div class="form-group">
-                <label for="day">Day</label>
+                <label for="{{ form.day.id_for_label }}">Day</label>
                 {{ form.day }}
             </div>                               
         
@@ -92,11 +105,14 @@
 
     <div id="popup-major" class="popup">
         <div class="popup-content">
-            <span class="close-button" onclick="closePopupMajor()">&times;</span>
+            <span class="close-button" onclick="closePopup('popup-major')">&times;</span>
             <h2 id="popup-title-major">Add New Major</h2>
             <form action="/createMajor/" id="popup-form-major" method="POST">
                 {% csrf_token %}
-                {{major_form.name}}
+                <div class="form-group">
+                    <label>Major Name</label>
+                    {{major_form.name}}
+                </div>
                 <button type="submit" class="submit-button">Add</button>
             </form>
         </div>
@@ -104,11 +120,19 @@
 
     <div id="popup-subject" class="popup">
         <div class="popup-content">
-            <span class="close-button" onclick="closePopupSubject()">&times;</span>
+            <span class="close-button" onclick="closePopup('popup-subject')">&times;</span>
             <h2 id="popup-title-subject">Add New Subject</h2>
             <form action="/createSubject/" id="popup-form-subject" method="POST">
                 {% csrf_token %}
-                {{subject_form.name}}
+                <div class="form-group">
+                    <label>Major</label>
+                    <div class="dropdown-group">
+                        {{subject_form.major}}
+                    </div>
+                    <br>
+                    <label>Subject Name</label>
+                    {{subject_form.name}}
+                </div>
                 <button type="submit" class="submit-button">Add</button>
             </form>
         </div>
@@ -116,45 +140,87 @@
 
     <div id="popup-teacher" class="popup">
         <div class="popup-content">
-            <span class="close-button" onclick="closePopupTeacher()">&times;</span>
+            <span class="close-button" onclick="closePopup('popup-teacher')">&times;</span>
             <h2 id="popup-title-teacher">Add New Teacher</h2>
             <form action="/createTeacher/" id="popup-form-teacher" method="POST">
                 {% csrf_token %}
-                {{teacher_form.name}}
+                <div class="form-group">
+                    <label>Major</label>
+                    <div class="dropdown-group">
+                        {{teacher_form.major}}
+                    </div>
+                    <br>
+                    <label>Teacher Name</label>
+                    {{teacher_form.name}}
+                </div>
                 <button type="submit" class="submit-button">Add</button>
             </form>
         </div>
     </div>
 
     <script>
+        $(document).ready(function(){
+            $('#id_major').change(function(){
+                let majorId = $(this).val()
+
+                //if majorId exists
+                if(majorId){
+                    //fetch subject based on major_id
+                    $.ajax({
+                        url: '{% url "getSubjects" %}',
+                        data: {
+                            'major_id': majorId
+                        },
+                        success: function(data){
+                            $('#id_subject')
+                            .empty()
+                            .append('<option value="">Select Subject</option>')
+                            $.each(data.subjects, function(index, item){
+                                $('#id_subject').append('<option value="' + item.id + '">' + item.name + '</option>')
+                            })
+                        }
+                    })
+
+                    //fetch teacher based on major_id
+                    $.ajax({
+                        url: '{% url "getTeachers" %}',
+                        data: {
+                            'major_id': majorId
+                        },
+                        success: function(data){
+                            $('#id_teacher')
+                            .empty()
+                            .append('<option value="">Select Teacher</option>')
+                            $.each(data.teachers, function(index, item){
+                                $('#id_teacher').append('<option value="' + item.id + '">' + item.name + '</option>')
+                            })
+                        }
+                    })
+                }else{
+                    $('#id_subject').empty().append('<option value="">Select Subject</option>')
+                    $('#id_teacher').empty().append('<option value="">Select Teacher</option>')
+                }
+            })
+        })
 
         //this is for major
         function showPopupMajor(){
             document.getElementById('popup-major').style.display = 'flex';
             document.getElementById('popup-input-major').placeholder = 'Enter ' + 'Major' + ' Name';
         }
-        function closePopupMajor(){
-            document.getElementById('popup-major').style.display = 'none';
-        }
-
         //this is for subject
         function showPopupSubject(){
             document.getElementById('popup-subject').style.display = 'flex';
             document.getElementById('popup-input-subject').placeholder = 'Enter ' + 'Subject' + ' Name';
 
         }
-        function closePopupSubject(){
-            document.getElementById('popup-subject').style.display = 'none';
-        }
-
         //this is for teacher
         function showPopupTeacher(){
             document.getElementById('popup-teacher').style.display = 'flex';
             document.getElementById('popup-input-teacher').placeholder = 'Enter ' + 'Teacher' + ' Name';
-
         }
-        function closePopupTeacher(){
-            document.getElementById('popup-teacher').style.display = 'none';
+        function closePopup(id){
+            document.getElementById(id).style.display = 'none';
         }
     </script>
 </body>

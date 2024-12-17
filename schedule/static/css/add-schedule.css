@@ -166,3 +166,11 @@ body {
   border-radius: 4px;
   box-sizing: border-box
 }
+
+.schedule-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}

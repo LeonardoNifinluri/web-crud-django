@@ -1,13 +1,14 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from schedule.forms import MajorForm, ScheduleForm, SubjectForm
-from schedule.models import Schedule, Subject, Major
+from schedule.forms import MajorForm, ScheduleForm, SubjectForm, TeacherForm
+from schedule.models import Schedule, Subject, Major, Teacher
 
 # Create your views here.
 def dashboard(request):
     majors = Major.objects.all()
     subjects = Subject.objects.all()
     schedules = Schedule.objects.all()
+    teachers = Teacher.objects.all()
 
     major_dict = {}
     for major in majors:
@@ -16,6 +17,10 @@ def dashboard(request):
     subject_dict = {}
     for subject in subjects:
         subject_dict[subject.id] = subject.name
+
+    teacher_dict = {}
+    for teacher in teachers:
+        teacher_dict[teacher.id] = teacher.name
     
     schedule_list = []
     for schedule in schedules:
@@ -24,7 +29,7 @@ def dashboard(request):
                 'id': schedule.id,
                 'major': major_dict[schedule.major_id],
                 'subject': subject_dict[schedule.subject_id],
-                'teacher_name': schedule.teacher_name,
+                'teacher_name': teacher_dict[schedule.teacher_id],
                 'time_begins': schedule.time_begins,
                 'time_ends': schedule.time_ends,
                 'room': schedule.room,
@@ -42,18 +47,19 @@ def dashboard(request):
     )
 
 def create_schedule(request):
-    majors = Major.objects.all().values()
-    subjects = Subject.objects.all().values()
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/')
-    else:
-        form = ScheduleForm()
-        major_form = MajorForm()
-        subject_form = SubjectForm()
-    
+        
+    form = ScheduleForm()
+    major_form = MajorForm()
+    subject_form = SubjectForm()
+    teacher_form = TeacherForm()
+    majors = Major.objects.all().values()
+    subjects = Subject.objects.all().values()
+    teachers = Teacher.objects.all().values()
     return render(
         request=request,
         template_name='add-schedule.html',
@@ -61,11 +67,13 @@ def create_schedule(request):
             'form': form,
             'major_form': major_form,
             'subject_form': subject_form,
+            'teacher_form': teacher_form,
             'majors': majors,
-            'subjects': subjects
+            'subjects': subjects,
+            'teachers': teachers
         }
     )
-
+    
 def create_major(request):
     form = MajorForm(request.POST)
     if form.is_valid():
@@ -74,6 +82,12 @@ def create_major(request):
     
 def create_subject(request):
     form = SubjectForm(request.POST)
+    if form.is_valid():
+        form.save()
+        return redirect('/createSchedule')
+    
+def create_teacher(request):
+    form = TeacherForm(request.POST)
     if form.is_valid():
         form.save()
         return redirect('/createSchedule')
@@ -92,13 +106,20 @@ def update(request, id):
         if form.is_valid():
             form.save()
             return redirect('/')
-    else:
-        form = ScheduleForm(instance=schedule)
+
+    form = ScheduleForm(instance=schedule)
+    major_form = MajorForm()
+    subject_form = SubjectForm()
+    teacher_form = TeacherForm()
     return render(
         request=request,
         template_name='update-schedule.html',
         context={
+            'schedule': schedule,
             'form': form,
+            'major_form': major_form,
+            'subject_form': subject_form,
+            'teacher_form': teacher_form,
         }
     )
 
@@ -136,6 +157,7 @@ def get_schedules(request):
         }
     )
 
+# for get majors
 def get_majors(request):
     majors = Major.objects.all().values()
     return JsonResponse(
@@ -144,11 +166,19 @@ def get_majors(request):
         }
     )
 
+# for get subjects based on major id
 def get_subjects(request):
-    subjects = Subject.objects.all().values()
-    return JsonResponse(
-        {
-            'subjects': list(subjects)
-        }
-    )
+    major_id = request.GET.get('major_id')
+    subjects = list(Subject.objects.filter(major_id=major_id).values('id', 'name'))
+    return JsonResponse({
+        'subjects': subjects
+    })
+
+# for get subjects based on major id
+def get_teachers(request):
+    major_id = request.GET.get('major_id')
+    teachers = list(Teacher.objects.filter(major_id=major_id).values('id', 'name'))
+    return JsonResponse({
+        'teachers': teachers
+    })
 

@@ -7,6 +7,13 @@ class Major(models.Model):
         return self.name
 
 class Subject(models.Model):
+    major = models.ForeignKey(Major, on_delete=models.CASCADE, default=1)
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
+
+class Teacher(models.Model):
+    major = models.ForeignKey(Major, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=255)
     def __str__(self):
         return self.name
@@ -33,9 +40,10 @@ class Schedule(models.Model):
     #on_delete means that when delete major with id in schedule, delete the schedule as well
     major = models.ForeignKey(Major, on_delete=models.CASCADE, default=1) 
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, default=1)
-    teacher_name = models.CharField(max_length=255)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, default=1)
     room = models.CharField(max_length=10, choices=ROOM_CHOICES)
     time_begins = models.CharField(max_length=5)
     time_ends = models.CharField(max_length=5)
     day = models.CharField(max_length=10, choices=DAY_CHOICES)
+
 
